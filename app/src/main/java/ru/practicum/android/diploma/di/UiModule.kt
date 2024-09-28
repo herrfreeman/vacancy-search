@@ -1,18 +1,27 @@
 package ru.practicum.android.diploma.di
 
+import android.content.Context
+import android.net.ConnectivityManager
+import org.koin.android.ext.koin.androidApplication
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 import ru.practicum.android.diploma.domain.models.Vacancy
 import ru.practicum.android.diploma.presentation.country.CountryViewModel
 import ru.practicum.android.diploma.presentation.favorites.FavoritesViewModel
-import ru.practicum.android.diploma.presentation.industry.IndustryViewModel
 import ru.practicum.android.diploma.presentation.filter.FilterViewModel
-import ru.practicum.android.diploma.presentation.search.SearchViewModel
+import ru.practicum.android.diploma.presentation.industry.IndustryViewModel
 import ru.practicum.android.diploma.presentation.region.RegionViewModel
+import ru.practicum.android.diploma.presentation.search.SearchViewModel
 import ru.practicum.android.diploma.presentation.vacancy.VacancyDetailsViewModel
 import ru.practicum.android.diploma.presentation.workplace.WorkplaceViewModel
 
 val uiModule = module {
+
+    single<ConnectivityManager> {
+        androidApplication().getSystemService(
+            Context.CONNECTIVITY_SERVICE
+        ) as ConnectivityManager
+    }
 
     viewModel<SearchViewModel> {
         SearchViewModel(
@@ -42,11 +51,11 @@ val uiModule = module {
     }
 
     viewModel<CountryViewModel> {
-        CountryViewModel(get(), get())
+        CountryViewModel(get(), get(), get())
     }
 
     viewModel<RegionViewModel> {
-        RegionViewModel(get(), get())
+        RegionViewModel(get(), get(), get())
     }
 
     viewModel<IndustryViewModel> {

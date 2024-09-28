@@ -1,5 +1,8 @@
 package ru.practicum.android.diploma.presentation.region
 
+import android.net.ConnectivityManager
+import android.net.ConnectivityManager.NetworkCallback
+import android.net.Network
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -12,6 +15,7 @@ import ru.practicum.android.diploma.presentation.workplace.WorkplaceState
 import ru.practicum.android.diploma.util.Resource
 
 class RegionViewModel(
+    connectivityManager: ConnectivityManager,
     private val filterInteractor: FilterInteractor,
     private val dictionariesInteractor: DictionariesInteractor
 ) : ViewModel() {
@@ -25,8 +29,32 @@ class RegionViewModel(
 
     private val filterState = MutableLiveData<WorkplaceState>()
     fun getFilterState(): MutableLiveData<WorkplaceState> = filterState
-
     private var filterString: String? = null
+  
+    init {
+        connectivityManager.registerDefaultNetworkCallback(object : NetworkCallback() {
+            override fun onAvailable(network: Network) {
+                super.onAvailable(network)
+                when (filterState.value) {
+                    is WorkplaceState.CountryAndRegionIsPicked -> {
+                        loadRegionsList((filterState.value as WorkplaceState.CountryAndRegionIsPicked).country.id)
+                    }
+
+                    is WorkplaceState.CountryIsPicked -> {
+                        loadRegionsList((filterState.value as WorkplaceState.CountryIsPicked).country.id)
+                    }
+
+                    WorkplaceState.NothingIsPicked -> {
+                        loadRegionsList(null)
+                    }
+
+                    null -> {
+                        loadRegionsList(null)
+                    }
+                }
+            }
+        })
+    }
 
     fun loadRegionsList(countryId: String?) {
         if (countryId != null) {
