@@ -39,27 +39,29 @@ class SearchViewModel(
     fun searchDebounce(changedText: String) {
         if (latestSearchText != changedText) {
             latestSearchText = changedText
+            filterInteractor.apply()
+            appliedFilter = filterInteractor.appliedFilter()
             vacancySearchDebounce(changedText)
         }
     }
 
-//    init {
-//        checkFilters()
-//    }
-
     // Функция для пагинации
     private fun searchVacancies(searchText: String) {
-        if (this.currentPage == maxPage) {
-            return
-        } else {
-            if (currentPage == 0) {
-                renderState(SearchState.LoadingNewExpression)
+        if (searchText.isNotBlank()) {
+            if (this.currentPage == maxPage) {
+                return
             } else {
-                isNextPageLoading = true
-                renderState(SearchState.NextPageLoading)
+                if (currentPage == 0) {
+                    renderState(SearchState.LoadingNewExpression)
+                } else {
+                    isNextPageLoading = true
+                    renderState(SearchState.NextPageLoading)
+                }
+                searchRequest(searchText, currentPage)
+                currentPage += 1
             }
-            searchRequest(searchText, currentPage)
-            currentPage += 1
+        } else {
+            renderState(SearchState.Default)
         }
     }
 
@@ -109,7 +111,11 @@ class SearchViewModel(
 
                     showToast(messageCheckConnection)
                 } else {
-                    renderState(SearchState.ServerError(messageServerError))
+                    if (isNextPageLoading) {
+                        renderState(SearchState.Content(vacanciesList, null))
+                    } else {
+                        renderState(SearchState.ServerError(messageServerError))
+                    }
                     showToast(errorMessage ?: messageServerError)
                 }
                 isNextPageLoading = false
@@ -166,7 +172,7 @@ class SearchViewModel(
             currentPage = 0
             vacanciesList.clear()
             latestSearchText?.let { searchText ->
-                searchRequest(searchText, currentPage)
+                searchVacancies(searchText)
             }
         }
     }

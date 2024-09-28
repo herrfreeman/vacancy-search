@@ -95,6 +95,7 @@
         <item name="android:textColorHint">?attr/text_hint_color</item>
         <item name="android:background" />
         <item name="android:textSize">16sp</item>
+        <item name="android:imeOptions">actionDone</item>
         <item name="android:fontWeight">400</item>
         <item name="android:inputType">text</item>
         <item name="android:maxLines">1</item>
@@ -164,9 +165,10 @@
     </style>
 
     <style name="HintTextApperiance" parent="TextAppearance.AppCompat">
-        <item name="fontFamily">@font/ys_display_regular</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
         <item name="android:textSize">12sp</item>
-        <item name="android:textColorHint">@color/text_hint_color</item>
+        <item name="android:fontWeight">400</item>
+        <item name="android:textColorHint">@color/text_hint_country_industry</item>
     </style>
 
 

@@ -4,6 +4,8 @@ import android.content.Context
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import ru.practicum.android.diploma.R
+import ru.practicum.android.diploma.data.network.DictionariesRequest
+import ru.practicum.android.diploma.data.network.DictionariesResponse
 import ru.practicum.android.diploma.data.network.Response
 import ru.practicum.android.diploma.data.network.VacanciesSearchRequest
 import ru.practicum.android.diploma.data.network.VacanciesSearchResponse
@@ -21,6 +23,8 @@ class VacanciesRepositoryImpl(
     private val context: Context,
     private val networkClient: NetworkClient,
 ) : VacanciesRepository {
+    private var currencyMap: Map<String, String>? = null
+
     private fun makeErrorMessage(response: Response): String {
         val header = context.getString(R.string.server_error_message)
         return "$header : ${response.resultCode}"
@@ -32,6 +36,10 @@ class VacanciesRepositoryImpl(
         page: Int,
         perPage: Int,
     ): Flow<Resource<VacanciesSearchResult>> = flow {
+        if (currencyMap == null) {
+            currencyMap = loadCurrencyMap()
+        }
+
         val response = networkClient.doRequest(
             VacanciesSearchRequest(
                 text = expression,
@@ -48,7 +56,12 @@ class VacanciesRepositoryImpl(
                     with(response as VacanciesSearchResponse) {
                         Resource.Success(
                             VacanciesSearchResult(
-                                vacancies = this.items.map { it.toVacancy() },
+                                vacancies = this.items.map {
+                                    val vacancy = it.toVacancy()
+                                    currencyMap?.get(vacancy.salaryCurrencyName)?.let { newName ->
+                                        vacancy.copy(salaryCurrencyName = newName)
+                                    } ?: vacancy
+                                },
                                 page = this.page,
                                 found = this.found,
                                 count = this.pages
@@ -92,6 +105,19 @@ class VacanciesRepositoryImpl(
             }
         )
 
+    }
+
+    private suspend fun loadCurrencyMap(): Map<String, String> {
+        val response = networkClient.doRequest(DictionariesRequest())
+        val currencyMap = emptyMap<String, String>().toMutableMap()
+        if (response.resultCode == NetworkClient.HTTP_SUCCESS) {
+            with(response as DictionariesResponse) {
+                this.dictionaries.currency.forEach {
+                    currencyMap[it.code] = it.abbr
+                }
+            }
+        }
+        return currencyMap
     }
 
 }

@@ -127,7 +127,7 @@ class RegionFragment : Fragment() {
 
         val adapter = AreaAdapter {
             viewModel.setCountryAndRegion(it)
-            findNavController().navigateUp()
+            findNavController().popBackStack()
         }
 
         adapter.setItems(regionsList)

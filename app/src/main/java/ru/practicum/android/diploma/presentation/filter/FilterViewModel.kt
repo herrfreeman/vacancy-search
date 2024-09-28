@@ -26,7 +26,7 @@ class FilterViewModel(private val filterInteractor: FilterInteractor, applicatio
     }
 
     fun clearFilter() {
-        filterInteractor.flushFilters()
+        filterInteractor.flushCurrentFilter()
         currentFilter = filterInteractor.currentFilter()
         postCurrentFilter()
     }
@@ -71,4 +71,6 @@ class FilterViewModel(private val filterInteractor: FilterInteractor, applicatio
     }
 
     fun currentFilterIsEmpty() = currentFilter == Filter()
+
+    fun currentFilterChanged() = currentFilter != filterInteractor.appliedFilter()
 }

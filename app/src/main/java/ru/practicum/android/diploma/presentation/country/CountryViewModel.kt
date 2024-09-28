@@ -51,7 +51,7 @@ class CountryViewModel(
     }
 
     fun setCountry(country: Area) {
-        filterInteractor.setCountry(country)
-        filterInteractor.setArea(country)
+        filterInteractor.selectCountry(country)
+        filterInteractor.selectRegion(country)
     }
 }

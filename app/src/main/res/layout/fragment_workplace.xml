@@ -23,112 +23,46 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/country_bar"
+        style="@style/AndroidDiploma.TextStyleFilter"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/area_item_height"
+        android:layout_height="@dimen/filter_button"
         android:layout_marginTop="@dimen/size_xxl"
-        app:layout_constraintTop_toBottomOf="@id/workplace_title">
+        android:gravity="center_vertical"
+        android:hint="@string/country"
+        app:hintTextAppearance="@style/HintTextApperiance"
+        app:layout_constraintTop_toBottomOf="@id/workplace_title"
+        app:prefixTextAppearance="@style/FontYSDisplay.Regular16">
 
-        <TextView
-            android:id="@+id/country_hint"
-            style="@style/FontYSDisplay.Regular16"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/size_xxl"
-            android:text="@string/country"
-            android:textColor="@color/gray"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/country_title"
-            style="@style/FontYSDisplay.Regular12"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/size_xxl"
-            android:text="@string/country"
-            app:layout_constraintBottom_toTopOf="@id/country_name"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_chainStyle="packed" />
-
-        <TextView
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/country_name"
-            style="@style/FontYSDisplay.Regular16"
-            android:layout_width="wrap_content"
+            style="@style/AndroidDiploma.TextStyleFilter.EditText"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/size_xxl"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/country_title" />
+            android:text="" />
 
-        <ImageView
-            android:id="@+id/action_icon_country"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/size_xxl"
-            android:src="@drawable/arrow_forward"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:tint="?attr/colorOnPrimary" />
+    </com.google.android.material.textfield.TextInputLayout>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/region_bar"
+        style="@style/AndroidDiploma.TextStyleFilter"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/area_item_height"
-        app:layout_constraintTop_toBottomOf="@id/country_bar">
+        android:layout_height="@dimen/filter_button"
+        android:gravity="center_vertical"
+        android:hint="@string/region"
+        app:hintTextAppearance="@style/HintTextApperiance"
+        app:layout_constraintTop_toBottomOf="@id/country_bar"
+        app:prefixTextAppearance="@style/FontYSDisplay.Regular16">
 
-        <TextView
-            android:id="@+id/region_hint"
-            style="@style/FontYSDisplay.Regular16"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/size_xxl"
-            android:text="@string/region"
-            android:textColor="@color/gray"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/region_title"
-            style="@style/FontYSDisplay.Regular12"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/size_xxl"
-            android:text="@string/region"
-            app:layout_constraintBottom_toTopOf="@id/region_name"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_chainStyle="packed" />
-
-        <TextView
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/region_name"
-            style="@style/FontYSDisplay.Regular16"
-            android:layout_width="wrap_content"
+            style="@style/AndroidDiploma.TextStyleFilter.EditText"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/size_xxl"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/region_title" />
+            android:text="" />
 
-        <ImageView
-            android:id="@+id/action_icon_region"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/size_xxl"
-            android:src="@drawable/arrow_forward"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:tint="?attr/colorOnPrimary" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/choose_button"

@@ -22,7 +22,6 @@ import ru.practicum.android.diploma.presentation.filter.FilterState
 import ru.practicum.android.diploma.presentation.filter.FilterViewModel
 
 class FilterFragment : Fragment() {
-    private var inputText: String? = ""
     private var textWatcher: TextWatcher? = null
     private var _binding: FragmentFilterBinding? = null
     private val binding
@@ -99,9 +98,6 @@ class FilterFragment : Fragment() {
         }
         binding.resetButton.setOnClickListener {
             viewModel.clearFilter()
-            inputText = ""
-            binding.resetButton.isVisible = false
-            binding.saveButton.isVisible = true
         }
 
         binding.salaryIsRequiredCheck.setOnClickListener {
@@ -116,15 +112,18 @@ class FilterFragment : Fragment() {
     }
 
     private fun renderConfirmButtons() {
-        binding.saveButton.isVisible = !viewModel.currentFilterIsEmpty()
-        binding.resetButton.isVisible = binding.saveButton.isVisible
+        binding.saveButton.isVisible = viewModel.currentFilterChanged()
+        binding.resetButton.isVisible = !viewModel.currentFilterIsEmpty()
     }
 
     private fun render(state: FilterState) {
+        textWatcher?.let { binding.salaryValue.removeTextChangedListener(it) }
         when (state) {
             FilterState.Empty -> emptyScreen()
             is FilterState.Filled -> filterScreen(state.filter)
         }
+        textWatcher?.let { binding.salaryValue.addTextChangedListener(it) }
+        renderConfirmButtons()
     }
 
     private fun filterScreen(filter: Filter) {
@@ -134,12 +133,11 @@ class FilterFragment : Fragment() {
         fillWorkPlace()
         fillIndustry()
         if (filter.salary.isNullOrEmpty() or (filter.salary == "")) {
-            inputText = ""
             binding.salaryValue.setText(R.string.empty_string)
             binding.salaryFrame.defaultHintTextColor = hintColorStates().first
         } else {
-            inputText = filter.salary
             binding.salaryValue.setText(filter.salary)
+            binding.salaryFrame.setEndIconDrawable(R.drawable.close_icon)
             binding.salaryFrame.defaultHintTextColor = hintColorStates().second
         }
         binding.resetButton.isVisible = true
@@ -147,6 +145,7 @@ class FilterFragment : Fragment() {
 
     private fun showWorkplace(filter: Filter) {
         if (filter.country == null) {
+            binding.workPlaceValue.text = null
             binding.workPlaceValue.setText(getString(R.string.empty_string))
         } else if (filter.area?.parentId.isNullOrEmpty()) {
             binding.workPlaceValue.setText(filter.country.name)
@@ -162,6 +161,7 @@ class FilterFragment : Fragment() {
     }
 
     private fun fillWorkPlace() {
+        binding.workPlace.defaultHintTextColor = setGrayColor()
         if (binding.workPlaceValue.text.toString().isNotEmpty()) {
             binding.workPlace.defaultHintTextColor = setHintOnValueColor()
             binding.workPlace.setEndIconDrawable(R.drawable.close_icon)
@@ -185,6 +185,7 @@ class FilterFragment : Fragment() {
     }
 
     private fun fillIndustry() {
+        binding.industry.defaultHintTextColor = setGrayColor()
         if (binding.industryValue.text.toString().isNotEmpty()) {
             binding.industry.setEndIconDrawable(R.drawable.close_icon)
             binding.industry.defaultHintTextColor = setHintOnValueColor()
@@ -208,14 +209,18 @@ class FilterFragment : Fragment() {
     }
 
     private fun emptyScreen() {
-        binding.resetButton.isVisible = false
-        binding.saveButton.isVisible = false
-        binding.workPlaceValue.setText(getString(R.string.empty_string))
-        binding.industryValue.setText(getString(R.string.empty_string))
-        binding.salaryValue.setText(getString(R.string.empty_string))
-        binding.salaryIsRequiredCheck.isChecked = false
-        binding.workPlace.setEndIconDrawable(R.drawable.arrow_forward)
-        binding.industry.setEndIconDrawable(R.drawable.arrow_forward)
+        with(binding) {
+            workPlace.defaultHintTextColor = setGrayColor()
+            industry.defaultHintTextColor = setGrayColor()
+            resetButton.isVisible = false
+            saveButton.isVisible = false
+            workPlaceValue.setText(getString(R.string.empty_string))
+            industryValue.setText(getString(R.string.empty_string))
+            salaryValue.setText(getString(R.string.empty_string))
+            salaryIsRequiredCheck.isChecked = false
+            workPlace.setEndIconDrawable(R.drawable.arrow_forward)
+            industry.setEndIconDrawable(R.drawable.arrow_forward)
+        }
     }
 
     private fun hintColorStates(): Triple<ColorStateList, ColorStateList, ColorStateList> {

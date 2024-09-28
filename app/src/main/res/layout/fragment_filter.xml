@@ -31,6 +31,7 @@
         android:layout_height="@dimen/filter_button"
         android:gravity="center_vertical"
         android:hint="@string/work_place"
+        android:layout_marginTop="@dimen/size_xxl"
         app:hintTextAppearance="@style/HintTextApperiance"
         app:layout_constraintTop_toBottomOf="@id/filter_title"
         app:prefixTextAppearance="@style/FontYSDisplay.Regular16">

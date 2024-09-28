@@ -29,7 +29,9 @@ val repositoryModule = module {
     }
 
     single<FavoritesRepository> {
-        FavoritesRepositoryImpl(get())
+        FavoritesRepositoryImpl(
+            database = get(),
+        )
     }
 
     single<SharingRepository> {

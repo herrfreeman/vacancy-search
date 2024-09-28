@@ -8,10 +8,24 @@ import ru.practicum.android.diploma.domain.models.Industry
 
 class FilterInteractorImpl(private val repository: FilterRepository) : FilterInteractor {
     private var currentFilter: Filter = repository.loadFilter()
-    private var appliedFilter: Filter = repository.loadAppliedFilter()
+    private var appliedFilter: Filter = currentFilter
+    private var selectedCountry: Area? = null
+    private var selectedRegion: Area? = null
 
     override fun currentFilter(): Filter = currentFilter
     override fun appliedFilter(): Filter = appliedFilter
+
+    override fun selectCountry(country: Area?) {
+        selectedCountry = country
+    }
+
+    override fun selectRegion(region: Area?) {
+        selectedRegion = region
+    }
+
+    override fun selectedCountry() = selectedCountry
+
+    override fun selectedRegion() = selectedRegion
 
     override fun setCountry(country: Area?) {
         currentFilter = currentFilter.copy(country = country)
@@ -47,14 +61,18 @@ class FilterInteractorImpl(private val repository: FilterRepository) : FilterInt
     }
 
     override fun apply() {
-        appliedFilter = currentFilter
-        repository.saveAppliedFilter(appliedFilter)
+        if (appliedFilter != currentFilter) {
+            appliedFilter = currentFilter
+            repository.saveAppliedFilter(appliedFilter)
+        }
     }
 
-    override fun flushFilters() {
+    override fun flushCurrentFilter() {
         currentFilter = Filter()
-        appliedFilter = Filter()
         saveCurrentFilter()
-        saveAppliedFilter()
+    }
+
+    override fun checkRegionsAreSaved(): Boolean {
+        return selectedCountry == currentFilter.country && selectedRegion == currentFilter.area
     }
 }
